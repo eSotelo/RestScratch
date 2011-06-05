@@ -1,0 +1,9 @@
+Bin
+Obj
+bin
+obj
+*.suo
+*.user
+UserData
+*-results.xml
+*.Publish.xml
