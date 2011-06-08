@@ -174,5 +174,6 @@ namespace RestScratch
         {
             HandleRemove(lvHeaders, RequestSettings.Headers);
         }
-    }
+
+   }
 }
