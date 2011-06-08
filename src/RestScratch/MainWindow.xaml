@@ -1,8 +1,51 @@
 ﻿<Window x:Class="RestScratch.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="581">
     <Grid>
-        
+        <Button Content="Run" Height="23" Margin="0,276,12,0" Name="bRun" VerticalAlignment="Top" Click="bRun_Click" HorizontalAlignment="Right" Width="75" />
+        <TextBox Margin="12,204,12,41" Name="tbResults" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+        <Label Content="Address" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" Width="61" />
+        <TextBox Height="23" Margin="79,12,167,0" Name="tbAddress" VerticalAlignment="Top" DataContext="{Binding}" />
+        <Label Content="Method" Height="28" Margin="0,10,109,0" Name="label2" VerticalAlignment="Top" HorizontalAlignment="Right" Width="52" />
+        <ComboBox Height="23" Margin="0,12,12,0" Name="cbMethod" VerticalAlignment="Top" DataContext="{Binding}" SelectedValue="{Binding Path=Method}" HorizontalAlignment="Right" Width="91">
+            <ComboBoxItem Content="GET"  />
+            <ComboBoxItem Content="POST" />
+            <ComboBoxItem Content="PUT" />
+            <ComboBoxItem Content="DELETE" />
+            <ComboBoxItem Content="HEAD" />
+        </ComboBox>
+        <Grid Height="152" Margin="0,46,0,0" Name="gData" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="14*" />
+                <ColumnDefinition Width="172*" />
+                <ColumnDefinition Width="186*" />
+                <ColumnDefinition Width="186*" />
+            </Grid.ColumnDefinitions>
+            <ListView Height="114" Margin="0,33,0,0" Name="lvHeaders" VerticalAlignment="Top" MouseDoubleClick="lvHeaders_MouseDoubleClick" Grid.Column="1">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Key" Width="75" DisplayMemberBinding="{Binding Path=Key}" />
+                        <GridViewColumn Header="Value" Width="75" DisplayMemberBinding="{Binding Path=Value}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Label Content="Headers" Height="28" HorizontalAlignment="Left" Margin="0,5,0,0" Name="label3" VerticalAlignment="Top" Width="86" Grid.Column="1" />
+            <Button Content="+" Height="23" HorizontalAlignment="Right" Margin="0,5,26,0" Name="bAddHeader" VerticalAlignment="Top" Width="19" Click="bAddHeader_Click" Grid.Column="1" />
+            <Button Content="-" Height="23" HorizontalAlignment="Right" Margin="0,5,0,0" Name="bRemoveHeader" VerticalAlignment="Top" Width="20" Click="bRemoveHeader_Click" Grid.Column="1" />
+            <ListView Margin="5,33,0,6" Name="lvFormData" MouseDoubleClick="lvFormData_MouseDoubleClick" Grid.Column="2">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Key}" Header="Key" Width="75" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Value}" Header="Value" Width="75" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Label Content="Form Data" Height="28" HorizontalAlignment="Left" Margin="6,5,0,0" Name="label4" VerticalAlignment="Top" Width="86" Grid.Column="2" />
+            <Button Content="+" Height="23" HorizontalAlignment="Right" Margin="0,4,27,0" Name="bAddFormData" VerticalAlignment="Top" Width="19" Click="bAddFormData_Click" Grid.Column="2" />
+            <Button Content="-" Height="23" HorizontalAlignment="Right" Margin="0,4,0,0" Name="bRemoveFormData" VerticalAlignment="Top" Width="20" Click="bRemoveFormData_Click" Grid.Column="2" />
+            <TextBox Margin="8,32,12,6" Name="tbEntityBody" Grid.Column="3" />
+            <Label Content="Entity Body" Height="28" HorizontalAlignment="Left" Margin="7,5,0,0" Name="label5" VerticalAlignment="Top" Grid.Column="3" />
+        </Grid>
     </Grid>
 </Window>
