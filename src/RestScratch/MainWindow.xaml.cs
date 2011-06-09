@@ -176,7 +176,10 @@ namespace RestScratch
                 result = sr.ReadToEnd();
 
             output.AppendLine(result);
-            wbResults.NavigateToString(result);
+            if (string.IsNullOrWhiteSpace(result))
+                wbResults.NavigateToString("Empty");
+            else
+                wbResults.NavigateToString(result);
         }
 
         private void lvFormData_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

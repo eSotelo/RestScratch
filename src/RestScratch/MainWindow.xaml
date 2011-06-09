@@ -52,7 +52,7 @@
                     <ColumnDefinition Width="220*" />
                     <ColumnDefinition Width="219*" />
                 </Grid.ColumnDefinitions>
-                <ListView Margin="6,33,0,6" Name="lvHeaders" MouseDoubleClick="lvHeaders_MouseDoubleClick" Grid.Column="1">
+                <ListView Margin="6,37,0,6" Name="lvHeaders" MouseDoubleClick="lvHeaders_MouseDoubleClick" Grid.Column="1">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Key" Width="75" DisplayMemberBinding="{Binding Path=Key}" />
@@ -63,7 +63,7 @@
                 <Label Content="Headers" Height="25" HorizontalAlignment="Left" Margin="6,6,0,0" Name="label3" VerticalAlignment="Top" Width="86" Grid.Column="1" />
                 <Button Content="+" Height="25" HorizontalAlignment="Right" Margin="0,5,26,0" Name="bAddHeader" VerticalAlignment="Top" Width="19" Click="bAddHeader_Click" Grid.Column="1" />
                 <Button Content="-" Height="25" HorizontalAlignment="Right" Margin="0,5,0,0" Name="bRemoveHeader" VerticalAlignment="Top" Width="20" Click="bRemoveHeader_Click" Grid.Column="1" />
-                <ListView Margin="5,33,0,6" Name="lvFormData" MouseDoubleClick="lvFormData_MouseDoubleClick" Grid.Column="2">
+                <ListView Margin="5,37,0,6" Name="lvFormData" MouseDoubleClick="lvFormData_MouseDoubleClick" Grid.Column="2">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Key}" Header="Key" Width="75" />
@@ -71,14 +71,14 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Label Content="Form Data" Height="25" HorizontalAlignment="Left" Margin="6,5,0,0" Name="label4" VerticalAlignment="Top" Width="86" Grid.Column="2" />
+                <Label Content="Form Data" Height="25" HorizontalAlignment="Left" Margin="5,6,0,0" Name="label4" VerticalAlignment="Top" Width="86" Grid.Column="2" />
                 <Button Content="+" Height="25" HorizontalAlignment="Right" Margin="0,4,27,0" Name="bAddFormData" VerticalAlignment="Top" Width="19" Click="bAddFormData_Click" Grid.Column="2" />
                 <Button Content="-" Height="25" HorizontalAlignment="Right" Margin="0,4,0,0" Name="bRemoveFormData" VerticalAlignment="Top" Width="20" Click="bRemoveFormData_Click" Grid.Column="2" />
-                <TextBox Margin="8,33,6,6" Name="tbEntityBody" Grid.Column="3" />
-                <Label Content="Entity Body" Height="25" HorizontalAlignment="Left" Margin="7,5,0,0" Name="label5" VerticalAlignment="Top" Grid.Column="3" />
+                <TextBox Margin="8,37,6,6" Name="tbEntityBody" Grid.Column="3" />
+                <Label Content="Entity Body" Height="25" HorizontalAlignment="Left" Margin="8,5,0,0" Name="label5" VerticalAlignment="Top" Grid.Column="3" />
             </Grid>
-            <Label Content="Results" Height="28" HorizontalAlignment="Left" Margin="8,0,0,0" Name="label7" VerticalAlignment="Top" Width="86" Grid.Row="1" />
-            <TabControl Grid.Row="1" Margin="8,34,6,-21" Name="tabControl1" TabStripPlacement="Bottom">
+            <Label Content="Results" Height="28" HorizontalAlignment="Left" Margin="8,10,0,0" Name="label7" VerticalAlignment="Top" Width="86" Grid.Row="1" />
+            <TabControl Grid.Row="1" Margin="8,44,6,-21" Name="tabControl1" TabStripPlacement="Bottom">
                 <TabItem Header="Source" Name="tbiSource">
                     <Grid>
                         <TextBox Name="tbResults" AcceptsReturn="True" TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" FontSize="12" FontFamily="Courier New" Text="" />
@@ -90,6 +90,7 @@
                     </Grid>
                 </TabItem>
             </TabControl>
+            <GridSplitter ResizeDirection="Auto" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="2" />
         </Grid>
         <Label Content="Content Type" Height="28" HorizontalAlignment="Left" Margin="11,58,0,0" Name="label6" VerticalAlignment="Top" Width="83" />
         <StatusBar Name="statusBar1" Height="25" VerticalAlignment="Bottom">
