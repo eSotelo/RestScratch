@@ -5,9 +5,9 @@
     <Grid>
         <Button Content="Run" Margin="0,0,12,12" Name="bRun" Click="bRun_Click" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" />
         <Label Content="Address" Height="28" HorizontalAlignment="Left" Margin="11,29,0,0" Name="label1" VerticalAlignment="Top" Width="61" />
-        <TextBox Height="23" Margin="78,29,168,0" Name="tbAddress" VerticalAlignment="Top" DataContext="{Binding}" Grid.ColumnSpan="2" />
-        <Label Content="Method" Height="28" Margin="0,27,110,0" Name="label2" VerticalAlignment="Top" HorizontalAlignment="Right" Width="52" Grid.Column="1" />
-        <ComboBox Height="23" Margin="0,29,13,0" Name="cbMethod" VerticalAlignment="Top" DataContext="{Binding}" SelectedValue="{Binding Path=Method}" HorizontalAlignment="Right" Width="91" Grid.Column="1">
+        <TextBox Height="23" Margin="100,29,12,0" Name="tbAddress" VerticalAlignment="Top" DataContext="{Binding}" />
+        <Label Content="Method" Height="28" Margin="0,58,110,0" Name="label2" VerticalAlignment="Top" HorizontalAlignment="Right" Width="52" />
+        <ComboBox Height="23" Margin="0,60,13,0" Name="cbMethod" VerticalAlignment="Top" DataContext="{Binding}" SelectedValue="{Binding Path=Method}" HorizontalAlignment="Right" Width="91">
             <ComboBoxItem Content="GET"  />
             <ComboBoxItem Content="POST" />
             <ComboBoxItem Content="PUT" />
@@ -22,7 +22,7 @@
                 <MenuItem Header="Save _As" Name="miSaveAs" Click="miSaveAs_Click" />
             </MenuItem>
         </Menu>
-        <Grid Margin="0,64,0,41" Name="grid1">
+        <Grid Margin="0,94,0,41" Name="grid1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="150*" />
                 <RowDefinition Height="83*" />
@@ -64,5 +64,7 @@
             </Grid>
             <TextBox Name="tbResults" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="6,0,6,6" />
         </Grid>
+        <Label Content="Content Type" Height="28" HorizontalAlignment="Left" Margin="11,58,0,0" Name="label6" VerticalAlignment="Top" Width="83" />
+        <TextBox DataContext="{Binding}" Height="23" Margin="100,58,168,0" Name="tbContentType" VerticalAlignment="Top" />
     </Grid>
 </Window>

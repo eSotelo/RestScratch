@@ -31,6 +31,10 @@ namespace RestScratch
                 miNew_Click(this, new RoutedEventArgs());
         }
 
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+        }
 
         private void BindRequestSettings()
         {
@@ -52,6 +56,11 @@ namespace RestScratch
             b.Path = new PropertyPath("ContentBody");
             tbEntityBody.SetBinding(TextBox.TextProperty, b);
 
+            b = new Binding();
+            b.Source = RequestSettings;
+            b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            b.Path = new PropertyPath("ContentType");
+            tbContentType.SetBinding(TextBox.TextProperty, b);
 
             lvFormData.ItemsSource = null;
             lvFormData.ItemsSource = RequestSettings.Form;
