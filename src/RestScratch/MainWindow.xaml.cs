@@ -122,30 +122,51 @@ namespace RestScratch
         }
         private void bRun_Click(object sender, RoutedEventArgs e)
         {
-
+            StringBuilder result = new StringBuilder();
             try
             {
                 WebRequest request = RequestSettings.MakeWebRequest();
                 WebResponse response = request.GetResponse();
-                StringBuilder result = new StringBuilder();
-                WriteResponse(result, response.GetResponseStream());
-                tbResults.Text = result.ToString();
+
+                WriteResponse(result, response);
             }
             catch (WebException ex)
             {
-                StringBuilder result =new StringBuilder();
+                
+
                 result.AppendLine("Exception!");
                 result.AppendLine("HTTP Status: " + ex.Status);
 
                 if (ex.Response != null)
-                    WriteResponse(result, ex.Response.GetResponseStream());
-
+                    WriteResponse(result, ex.Response);
+                else
+                {
+                    wbResults.NavigateToString("Empty");
+                    tbiSource.IsSelected = true;
+                }
                 result.AppendLine("Exception Detail");
 
                 result.AppendLine(ex.ToString());
-
+            }
+            finally
+            {
                 tbResults.Text = result.ToString();
             }
+        }
+
+        private void WriteResponse(StringBuilder result, WebResponse response)
+        {
+            result.AppendLine("Content Type: " + response.ContentType);
+            WriteResponse(result, response.GetResponseStream());
+            SetForwardTab(response.ContentType);
+        }
+
+        private void SetForwardTab(string contentType)
+        {
+            if (contentType.ToLowerInvariant().Trim().StartsWith("text/html"))
+                tbiHtml.IsSelected = true;
+            else
+                tbiSource.IsSelected = true;
         }
 
         private void WriteResponse(StringBuilder output, Stream stream)
@@ -155,6 +176,7 @@ namespace RestScratch
                 result = sr.ReadToEnd();
 
             output.AppendLine(result);
+            wbResults.NavigateToString(result);
         }
 
         private void lvFormData_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
