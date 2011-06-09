@@ -34,7 +34,7 @@
                 <MenuItem Header="_Save" InputGestureText="Ctrl + S" Name="miSave" Click="miSave_Click" />
                 <MenuItem Header="Save _As" InputGestureText="Ctrl + Shft + S" Name="miSaveAs" Click="miSaveAs_Click" />
                 <Separator/>
-                <MenuItem Header="E_xit (Ctrl + X)" InputGestureText="" Name="miExit" Click="miExit_Click" />
+                <MenuItem Header="E_xit" InputGestureText="Ctrl + X" Name="miExit" Click="miExit_Click" />
             </MenuItem>
         </Menu>
         <Grid Margin="0,94,0,60" Name="grid1">
