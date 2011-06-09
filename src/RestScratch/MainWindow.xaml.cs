@@ -20,6 +20,16 @@ namespace RestScratch
     public partial class MainWindow : Window
     {
         public RequestSettings RequestSettings { get; set; }
+        bool isDirty;
+        public bool IsDirty
+        {
+            get { return isDirty; }
+            set
+            {
+                isDirty = value;
+                SetTitle();
+            }
+        }
         string filename;
         public string Filename
         {
@@ -28,14 +38,23 @@ namespace RestScratch
             {
                 filename = value;
                 sbiFile.Content = Path.GetFileNameWithoutExtension(filename);
-                this.Title = "RestScratch" + (string.IsNullOrWhiteSpace(filename) ? "" : ": " + Path.GetFileNameWithoutExtension(filename));  
+                SetTitle();
             }
         }
 
+        private void SetTitle()
+        {
+            this.Title = "RestScratch" + (string.IsNullOrWhiteSpace(filename) ? "" : ": " + Path.GetFileNameWithoutExtension(filename));
+            if (IsDirty)
+                this.Title = string.Concat("*", this.Title);
+        }
+        
         public MainWindow()
         {
             InitializeComponent();
 
+
+            Closing += new System.ComponentModel.CancelEventHandler(MainWindow_Closing);
             Version v = Assembly.GetExecutingAssembly().GetName().Version;
             sbiVersion.Content = string.Format("Version: {0}.{1}.{2}.{3}", v.Major, v.Minor, v.Build, v.Revision);
 
@@ -46,6 +65,15 @@ namespace RestScratch
                 miNew_Click(this, new RoutedEventArgs());
         }
 
+        void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!IsDirty) return;
+
+            if (MessageBox.Show(this, "You have unsaved changes!\r\n Close anyway?", "Closing RestScratch",MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                e.Cancel = true;
+
+        }
+
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             base.OnClosing(e);
@@ -53,6 +81,7 @@ namespace RestScratch
 
         private void BindRequestSettings()
         {
+
             Binding b = new Binding();
             b.Source = RequestSettings;
             b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
@@ -83,6 +112,15 @@ namespace RestScratch
             lvHeaders.ItemsSource = null;
             lvHeaders.ItemsSource = RequestSettings.Headers;
 
+            tbResults.Text = "";
+
+            RequestSettings.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(RequestSettings_PropertyChanged);
+            IsDirty = false;
+        }
+
+        void RequestSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            IsDirty = true;
         }
         private void bRun_Click(object sender, RoutedEventArgs e)
         {
@@ -163,6 +201,7 @@ namespace RestScratch
 
         private void SetValueFromModal(EditItem modal, IDictionary<string, string> items)
         {
+            IsDirty = true;
             if (items.ContainsKey(modal.Key))
                 items[modal.Key] = modal.Value;
             else
