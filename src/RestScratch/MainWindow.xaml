@@ -16,8 +16,10 @@
         </ComboBox>
         <Menu Height="23" Name="mMain" IsMainMenu="True" VerticalAlignment="Top" Grid.ColumnSpan="2">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open" Name="miOpen" />
-                <MenuItem Header="_Save" Name="miSave" />
+                <MenuItem Header="_New" Name="miNew" Click="miNew_Click" />
+                <MenuItem Header="_Open" Name="miOpen" Click="miOpen_Click" />
+                <MenuItem Header="_Save" Name="miSave" Click="miSave_Click" />
+                <MenuItem Header="Save _As" Name="miSaveAs" Click="miSaveAs_Click" />
             </MenuItem>
         </Menu>
         <Grid Margin="0,64,0,41" Name="grid1">
@@ -25,7 +27,7 @@
                 <RowDefinition Height="150*" />
                 <RowDefinition Height="83*" />
             </Grid.RowDefinitions>
-            <Grid Margin="0,12,0,6" Name="gData">
+            <Grid Margin="0,0,0,6" Name="gData">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="119*" />
                 </Grid.RowDefinitions>

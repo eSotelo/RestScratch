@@ -4,12 +4,15 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace RestScratch
 {
+    [DataContract]
     public class RequestSettings : INotifyPropertyChanged
     {
         string address;
+        [DataMember]
         public string Address
         {
             get { return this.address; }
@@ -20,6 +23,7 @@ namespace RestScratch
             }
         }
         string method;
+        [DataMember]
         public string Method { get { return method; }
             set
             {
@@ -29,6 +33,7 @@ namespace RestScratch
         }
 
         string contentType;
+        [DataMember]
         public string ContentType { get { return contentType; }
             set
             {
@@ -38,6 +43,7 @@ namespace RestScratch
         }
 
         string contentBody;
+        [DataMember]
         public string ContentBody
         {
             get { return contentBody; }
@@ -47,7 +53,9 @@ namespace RestScratch
                 OnPropertyChanged("QueryString");
             }
         }
+        [DataMember]
         public IDictionary<string,string> Headers { get; private set; }
+        [DataMember]
         public IDictionary<string, string> Form { get; private set; }
 
 

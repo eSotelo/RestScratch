@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Collections.Generic;
 using System.Collections;
+using Microsoft.Win32;
+using System.Runtime.Serialization.Json;
 
 namespace RestScratch
 {
@@ -15,22 +17,20 @@ namespace RestScratch
     public partial class MainWindow : Window
     {
         public RequestSettings RequestSettings { get; set; }
+        public string Filename { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
 
             RequestSettings = new RequestSettings();
 
-            RequestSettings.ContentType = "application/x-www-form-urlencoded";
-            RequestSettings.Method = "POST";
-            RequestSettings.Address = "http://localhost:8080/OAuth/Token";
-            RequestSettings.Form["client_id"] = "9e880bc88e799ed";
-            RequestSettings.Form["client_secret"] = "dWe@XDN7KW";
-            RequestSettings.Form["grant_type"] = "refresh_token";
-            RequestSettings.Form["refresh_token"] = "29e3f69922ec32bd";
-            RequestSettings.Headers["User-Agent"] = "RestScratch";
-            RequestSettings.ContentBody = "test";
+            BindRequestSettings();
+        }
 
+
+        private void BindRequestSettings()
+        {
             Binding b = new Binding();
             b.Source = RequestSettings;
             b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
@@ -43,19 +43,19 @@ namespace RestScratch
             b.Path = new PropertyPath("Address");
             tbAddress.SetBinding(TextBox.TextProperty, b);
 
-
-
             b = new Binding();
             b.Source = RequestSettings;
             b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             b.Path = new PropertyPath("ContentBody");
             tbEntityBody.SetBinding(TextBox.TextProperty, b);
 
+
+            lvFormData.ItemsSource = null;
             lvFormData.ItemsSource = RequestSettings.Form;
+            lvHeaders.ItemsSource = null;
             lvHeaders.ItemsSource = RequestSettings.Headers;
 
         }
-
         private void bRun_Click(object sender, RoutedEventArgs e)
         {
 
@@ -175,5 +175,63 @@ namespace RestScratch
             HandleRemove(lvHeaders, RequestSettings.Headers);
         }
 
+        private void miOpen_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog diag = new OpenFileDialog();
+            diag.DefaultExt = ".rsr";
+            diag.Filter = "Rest Scratch Requets|*.rsr";
+
+            if (!diag.ShowDialog() ?? false) return;
+
+            Filename = diag.FileName;
+            string text = File.ReadAllText(diag.FileName, Encoding.Default);
+            byte[] data = Encoding.Default.GetBytes(text);
+
+            DataContractJsonSerializer dcjs = new DataContractJsonSerializer(typeof(RequestSettings));
+            using (MemoryStream ms = new MemoryStream(data))
+                RequestSettings = (RequestSettings)dcjs.ReadObject(ms);
+
+            BindRequestSettings();
+        }
+
+        private void miSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(Filename))
+            {
+                miSaveAs_Click(sender, e);
+                return;
+            }
+
+            SaveRequest(Filename);
+        }
+
+        private void miSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog diag = new SaveFileDialog();
+            diag.FileName = "RestScratchRequest";
+            diag.DefaultExt = ".rsr";
+            diag.Filter = "Rest Scratch Requets|*.rsr";
+
+            if (diag.ShowDialog() ?? false)
+                SaveRequest(diag.FileName);
+        }
+
+        private void SaveRequest(string filename)
+        {
+            DataContractJsonSerializer dcjs = new DataContractJsonSerializer(typeof(RequestSettings));
+            Filename = filename;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                dcjs.WriteObject(ms, RequestSettings);
+                File.WriteAllBytes(filename, ms.ToArray());
+            }
+        }
+
+        private void miNew_Click(object sender, RoutedEventArgs e)
+        {
+            RequestSettings = new RequestSettings();
+            Filename = null;
+            BindRequestSettings();
+        }
    }
 }
