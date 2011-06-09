@@ -28,6 +28,7 @@ namespace RestScratch
             {
                 filename = value;
                 sbiFile.Content = Path.GetFileNameWithoutExtension(filename);
+                this.Title = "RestScratch" + (string.IsNullOrWhiteSpace(filename) ? "" : ": " + Path.GetFileNameWithoutExtension(filename));  
             }
         }
 
@@ -70,11 +71,12 @@ namespace RestScratch
             b.Path = new PropertyPath("ContentBody");
             tbEntityBody.SetBinding(TextBox.TextProperty, b);
 
+
             b = new Binding();
             b.Source = RequestSettings;
             b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             b.Path = new PropertyPath("ContentType");
-            tbContentType.SetBinding(TextBox.TextProperty, b);
+            cbContentType.SetBinding(ComboBox.TextProperty, b);
 
             lvFormData.ItemsSource = null;
             lvFormData.ItemsSource = RequestSettings.Form;
@@ -98,11 +100,10 @@ namespace RestScratch
                 StringBuilder result =new StringBuilder();
                 result.AppendLine("Exception!");
                 result.AppendLine("HTTP Status: " + ex.Status);
-                result.AppendLine();
+
                 if (ex.Response != null)
                     WriteResponse(result, ex.Response.GetResponseStream());
 
-                result.AppendLine();
                 result.AppendLine("Exception Detail");
 
                 result.AppendLine(ex.ToString());
@@ -131,7 +132,7 @@ namespace RestScratch
 
             KeyValuePair<string, string> item = (KeyValuePair<string, string>)lv.SelectedItem;
             EditItem modal = new EditItem(item.Key, item.Value);
-
+            modal.Owner = this;
             if (!modal.ShowDialog() ?? false) return;
 
             SetValueFromModal(modal, dictionary);
@@ -151,7 +152,7 @@ namespace RestScratch
         private void HandleAdd(ListView lv, IDictionary<string, string> dictionary)
         {
             EditItem modal = new EditItem();
-
+            modal.Owner = this;
             if (!modal.ShowDialog() ?? false) return;
 
             SetValueFromModal(modal, dictionary);
