@@ -294,6 +294,7 @@ namespace RestScratch
                 dcjs.WriteObject(ms, RequestSettings);
                 File.WriteAllBytes(filename, ms.ToArray());
             }
+            IsDirty = false;
         }
 
         private void miNew_Click(object sender, RoutedEventArgs e)
@@ -301,6 +302,11 @@ namespace RestScratch
             RequestSettings = new RequestSettings();
             Filename = null;
             BindRequestSettings();
+        }
+
+        private void miExit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
    }
 }
