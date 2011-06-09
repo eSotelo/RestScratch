@@ -98,6 +98,9 @@ namespace RestScratch
             else if( !string.IsNullOrWhiteSpace(ContentBody))
                 postData = ContentBody;
 
+            foreach (KeyValuePair<string, string> item in this.Headers)
+                request.Headers.Add(item.Key, item.Value);
+
             if (!string.IsNullOrWhiteSpace(postData) && request.Method.ToUpperInvariant() != "GET" )
             {
                 byte[] data = System.Text.UTF8Encoding.UTF8.GetBytes(postData);

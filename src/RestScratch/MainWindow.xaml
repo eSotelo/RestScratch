@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="RestScratch" Height="436" Width="680" Icon="/RestScratch;component/Explorer.ico" MinWidth="680" MinHeight="400">
     <Grid Height="396">
-        <Button Content="Run" Margin="0,0,6,31" Name="bRun" Click="bRun_Click" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" />
+        <Button Content="Run" Margin="0,0,6,31" Name="bRun" Click="bRun_Click" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" IsDefault="True" />
         <Label Content="Address" Height="28" HorizontalAlignment="Left" Margin="11,29,0,0" Name="label1" VerticalAlignment="Top" Width="61" />
         <TextBox Height="23" Margin="100,29,12,0" Name="tbAddress" VerticalAlignment="Top" DataContext="{Binding}" />
         <Label Content="Method" Height="28" Margin="0,58,110,0" Name="label2" VerticalAlignment="Top" HorizontalAlignment="Right" Width="52" />
