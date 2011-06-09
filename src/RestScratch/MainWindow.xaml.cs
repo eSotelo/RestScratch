@@ -1,16 +1,14 @@
-﻿using System.Windows;
-using System.Net;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Collections.Generic;
-using System.Collections;
 using Microsoft.Win32;
-using System.Runtime.Serialization.Json;
-using System;
-using System.Reflection;
-using System.Diagnostics;
 
 namespace RestScratch
 {
@@ -69,7 +67,7 @@ namespace RestScratch
         {
             if (!IsDirty) return;
 
-            if (MessageBox.Show(this, "You have unsaved changes!\r\n Close anyway?", "Closing RestScratch",MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            if (MessageBox.Show(this, "You have unsaved changes!\r\n Keep open?", "Closing RestScratch",MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 e.Cancel = true;
 
         }
