@@ -9,6 +9,8 @@ using System.Collections;
 using Microsoft.Win32;
 using System.Runtime.Serialization.Json;
 using System;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace RestScratch
 {
@@ -18,11 +20,23 @@ namespace RestScratch
     public partial class MainWindow : Window
     {
         public RequestSettings RequestSettings { get; set; }
-        public string Filename { get; set; }
+        string filename;
+        public string Filename
+        {
+            get { return filename; }
+            set
+            {
+                filename = value;
+                sbiFile.Content = Path.GetFileNameWithoutExtension(filename);
+            }
+        }
 
         public MainWindow()
         {
             InitializeComponent();
+
+            Version v = Assembly.GetExecutingAssembly().GetName().Version;
+            sbiVersion.Content = string.Format("Version: {0}.{1}.{2}.{3}", v.Major, v.Minor, v.Build, v.Revision);
 
             string[] args = Environment.GetCommandLineArgs();
             if (args != null && args.Length > 1)
