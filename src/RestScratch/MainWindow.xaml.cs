@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections;
 using Microsoft.Win32;
 using System.Runtime.Serialization.Json;
+using System;
 
 namespace RestScratch
 {
@@ -23,9 +24,11 @@ namespace RestScratch
         {
             InitializeComponent();
 
-            RequestSettings = new RequestSettings();
-
-            BindRequestSettings();
+            string[] args = Environment.GetCommandLineArgs();
+            if (args != null && args.Length > 1)
+                OpenFile(args[1]);
+            else
+                miNew_Click(this, new RoutedEventArgs());
         }
 
 
@@ -183,8 +186,14 @@ namespace RestScratch
 
             if (!diag.ShowDialog() ?? false) return;
 
-            Filename = diag.FileName;
-            string text = File.ReadAllText(diag.FileName, Encoding.Default);
+            OpenFile(diag.FileName);
+            
+        }
+
+        private void OpenFile(string filename)
+        {
+            Filename = filename;
+            string text = File.ReadAllText(filename, Encoding.Default);
             byte[] data = Encoding.Default.GetBytes(text);
 
             DataContractJsonSerializer dcjs = new DataContractJsonSerializer(typeof(RequestSettings));
@@ -193,7 +202,6 @@ namespace RestScratch
 
             BindRequestSettings();
         }
-
         private void miSave_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(Filename))
