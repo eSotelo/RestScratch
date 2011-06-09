@@ -35,13 +35,13 @@
                 <MenuItem Header="_Save" InputGestureText="Ctrl + S" Name="miSave" Click="miSave_Click" />
                 <MenuItem Header="Save _As" InputGestureText="Ctrl + Shft + S" Name="miSaveAs" Click="miSaveAs_Click" />
                 <Separator/>
-                <MenuItem Header="E_xit" InputGestureText="Ctrl + X" Name="miExit" Click="miExit_Click" />
+                <MenuItem Header="E_xit (Ctrl + X)" InputGestureText="" Name="miExit" Click="miExit_Click" />
             </MenuItem>
         </Menu>
         <Grid Margin="0,94,0,60" Name="grid1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="150*" />
-                <RowDefinition Height="83*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid Margin="0,0,0,6" Name="gData">
                 <Grid.RowDefinitions>
@@ -61,7 +61,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Label Content="Headers" Height="28" HorizontalAlignment="Left" Margin="0,5,0,0" Name="label3" VerticalAlignment="Top" Width="86" Grid.Column="1" />
+                <Label Content="Headers" Height="28" HorizontalAlignment="Left" Margin="8,5,0,0" Name="label3" VerticalAlignment="Top" Width="86" Grid.ColumnSpan="2" />
                 <Button Content="+" Height="23" HorizontalAlignment="Right" Margin="0,5,26,0" Name="bAddHeader" VerticalAlignment="Top" Width="19" Click="bAddHeader_Click" Grid.Column="1" />
                 <Button Content="-" Height="23" HorizontalAlignment="Right" Margin="0,5,0,0" Name="bRemoveHeader" VerticalAlignment="Top" Width="20" Click="bRemoveHeader_Click" Grid.Column="1" />
                 <ListView Margin="5,33,0,6" Name="lvFormData" MouseDoubleClick="lvFormData_MouseDoubleClick" Grid.Column="2">
@@ -78,7 +78,8 @@
                 <TextBox Margin="8,33,6,6" Name="tbEntityBody" Grid.Column="3" />
                 <Label Content="Entity Body" Height="28" HorizontalAlignment="Left" Margin="7,5,0,0" Name="label5" VerticalAlignment="Top" Grid.Column="3" />
             </Grid>
-            <TextBox Name="tbResults" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="6,0,6,6" />
+            <TextBox Name="tbResults" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="6,34,6,6" />
+            <Label Content="Results" Height="28" HorizontalAlignment="Left" Margin="8,0,0,0" Name="label7" VerticalAlignment="Top" Width="86" Grid.Row="1" />
         </Grid>
         <Label Content="Content Type" Height="28" HorizontalAlignment="Left" Margin="11,58,0,0" Name="label6" VerticalAlignment="Top" Width="83" />
         <StatusBar Name="statusBar1" Height="25" VerticalAlignment="Bottom">
