@@ -157,6 +157,8 @@ namespace RestScratch
         private void WriteResponse(StringBuilder result, WebResponse response)
         {
             result.AppendLine("Content Type: " + response.ContentType);
+            result.AppendLine(string.Format("HTTP Status: {0} ({1})", ((HttpWebResponse)response).StatusDescription, (int)((HttpWebResponse)response).StatusCode));
+            result.AppendLine("------------------------------");
             WriteResponse(result, response.GetResponseStream());
             SetForwardTab(response.ContentType);
         }
