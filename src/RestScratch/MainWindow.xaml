@@ -7,14 +7,12 @@
         <CommandBinding Command="Open" Executed="miOpen_Click"/>
         <CommandBinding Command="Save" Executed="miSave_Click"/>
         <CommandBinding Command="SaveAs" Executed="miSaveAs_Click"/>
-        <CommandBinding Command="Close" Executed="miExit_Click"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="N" Modifiers="Control" Command="New"/>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
         <KeyBinding Key="S" Modifiers="Control" Command="Save"/>
         <KeyBinding Key="S" Modifiers="Control + Shift" Command="SaveAs"/>
-        <KeyBinding Key="X" Modifiers="Control" Command="Close"/>
     </Window.InputBindings>
     <Grid Height="Auto" VerticalAlignment="Stretch">
         <Label Content="Address" Height="28" HorizontalAlignment="Left" Margin="11,29,0,0" Name="label1" VerticalAlignment="Top" Width="61" />
@@ -28,13 +26,13 @@
             <ComboBoxItem Content="HEAD" />
         </ComboBox>
         <Menu Height="23" Name="mMain" IsMainMenu="True" VerticalAlignment="Top" Grid.ColumnSpan="2">
-            <MenuItem Header="_File">
+            <MenuItem Header="_File" >
                 <MenuItem Header="_New" InputGestureText="Ctrl + N" Name="miNew" Click="miNew_Click"/>
                 <MenuItem Header="_Open" InputGestureText="Ctrl + O" Name="miOpen" Click="miOpen_Click" />
                 <MenuItem Header="_Save" InputGestureText="Ctrl + S" Name="miSave" Click="miSave_Click" />
                 <MenuItem Header="Save _As" InputGestureText="Ctrl + Shft + S" Name="miSaveAs" Click="miSaveAs_Click" />
                 <Separator/>
-                <MenuItem Header="E_xit" InputGestureText="Ctrl + X" Name="miExit" Click="miExit_Click" />
+                <MenuItem Header="E_xit" Name="miExit" Click="miExit_Click" />
             </MenuItem>
         </Menu>
         <Grid Margin="0,94,0,60" Name="grid1">
