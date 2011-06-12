@@ -155,8 +155,42 @@ namespace RestScratch
             result.AppendLine("Content Type: " + response.ContentType);
             result.AppendLine(string.Format("HTTP Status: {0} ({1})", ((HttpWebResponse)response).StatusDescription, (int)((HttpWebResponse)response).StatusCode));
             result.AppendLine("------------------------------");
-            WriteResponse(result, response.GetResponseStream());
-            SetForwardTab(response.ContentType);
+            if (response.ContentType.StartsWith("text"))
+            {
+                WriteResponse(result, response.GetResponseStream());
+                SetForwardTab(response.ContentType);
+            }
+            else
+            {
+                result.AppendLine("non-textural response");
+                if (response.ContentType.StartsWith("image"))
+                {
+
+                    string path = Path.Combine(
+                        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "temp.png");
+                    using (Stream stream = response.GetResponseStream())
+                    {
+                        byte[] buffer = new byte[1024];
+                        int byteCount;
+                        using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                        {
+                            do
+                            {
+                                byteCount = stream.Read(buffer, 0, buffer.Length);
+
+                                fs.Write(buffer, 0, byteCount);
+                            } while (byteCount > 0);
+                        }
+                        wbResults.Source = new Uri(path);
+                    }
+                    
+                }
+                else
+                    wbResults.NavigateToStream(response.GetResponseStream());
+                
+                tbiHtml.IsSelected = true;
+            }
         }
 
         private void SetForwardTab(string contentType)
@@ -264,6 +298,8 @@ namespace RestScratch
 
         private void miOpen_Click(object sender, RoutedEventArgs e)
         {
+            if (CancelDirtyOperation())
+                return;
             OpenFileDialog diag = new OpenFileDialog();
             diag.DefaultExt = ".rsr";
             diag.Filter = "Rest Scratch Requets|*.rsr";
@@ -276,6 +312,7 @@ namespace RestScratch
 
         private void OpenFile(string filename)
         {
+            
             Filename = filename;
             string text = File.ReadAllText(filename, Encoding.Default);
             byte[] data = Encoding.Default.GetBytes(text);
@@ -320,8 +357,17 @@ namespace RestScratch
             IsDirty = false;
         }
 
+        private bool CancelDirtyOperation()
+        {
+            if (!IsDirty) return false;
+
+            return MessageBox.Show("You have unsaved changes.\r\nDo you want to continue?", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes;
+        }
         private void miNew_Click(object sender, RoutedEventArgs e)
         {
+            if (CancelDirtyOperation())
+                    return;
+
             RequestSettings = new RequestSettings();
             Filename = null;
             BindRequestSettings();
