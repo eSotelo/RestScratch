@@ -298,6 +298,8 @@ namespace RestScratch
 
         private void miOpen_Click(object sender, RoutedEventArgs e)
         {
+            if (CancelDirtyOperation())
+                return;
             OpenFileDialog diag = new OpenFileDialog();
             diag.DefaultExt = ".rsr";
             diag.Filter = "Rest Scratch Requets|*.rsr";
@@ -355,8 +357,17 @@ namespace RestScratch
             IsDirty = false;
         }
 
+        private bool CancelDirtyOperation()
+        {
+            if (!IsDirty) return false;
+
+            return MessageBox.Show("You have unsaved changes.\r\nDo you want to continue?", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes;
+        }
         private void miNew_Click(object sender, RoutedEventArgs e)
         {
+            if (CancelDirtyOperation())
+                    return;
+
             RequestSettings = new RequestSettings();
             Filename = null;
             BindRequestSettings();
