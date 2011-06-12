@@ -76,34 +76,30 @@ namespace RestScratch
         {
             base.OnClosing(e);
         }
-
-        private void BindRequestSettings()
+        private void SetTextboxBinding(TextBox tb, string propertyPath)
         {
-
             Binding b = new Binding();
             b.Source = RequestSettings;
             b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            b.Path = new PropertyPath("Method");
-            this.cbMethod.SetBinding(ComboBox.TextProperty, b);
-
-            b = new Binding();
+            b.Path = new PropertyPath(propertyPath);
+            tb.SetBinding(TextBox.TextProperty, b);
+        }
+        private void SetComboboxBinding(ComboBox cb, string propertyPath)
+        {
+            Binding b = new Binding();
             b.Source = RequestSettings;
             b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            b.Path = new PropertyPath("Address");
-            tbAddress.SetBinding(TextBox.TextProperty, b);
+            b.Path = new PropertyPath(propertyPath);
+            cb.SetBinding(ComboBox.TextProperty, b);
+        }
 
-            b = new Binding();
-            b.Source = RequestSettings;
-            b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            b.Path = new PropertyPath("ContentBody");
-            tbEntityBody.SetBinding(TextBox.TextProperty, b);
-
-
-            b = new Binding();
-            b.Source = RequestSettings;
-            b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            b.Path = new PropertyPath("ContentType");
-            cbContentType.SetBinding(ComboBox.TextProperty, b);
+        private void BindRequestSettings()
+        {
+            SetComboboxBinding(cbMethod, "Method");
+            SetComboboxBinding(cbContentType, "ContentType");
+            SetTextboxBinding(tbAddress, "Address");
+            SetTextboxBinding(tbFileName, "FileName");
+            SetTextboxBinding(tbFilePath, "FilePath");
 
             lvFormData.ItemsSource = null;
             lvFormData.ItemsSource = RequestSettings.Form;
@@ -304,7 +300,7 @@ namespace RestScratch
         private void miSaveAs_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog diag = new SaveFileDialog();
-            diag.FileName = "RestScratchRequest";
+            diag.FileName = string.IsNullOrWhiteSpace(Filename) ? "RestScratchRequest" : Path.GetFileNameWithoutExtension(Filename);
             diag.DefaultExt = ".rsr";
             diag.Filter = "Rest Scratch Requets|*.rsr";
 
@@ -334,6 +330,21 @@ namespace RestScratch
         private void miExit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void bBrowseFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "All Files (*.*)|*.*";
+            dialog.Title = "Browse to file for upload";
+
+            if( dialog.ShowDialog() ?? false)
+                tbFilePath.Text = dialog.FileName;
+        }
+
+        private void bClearFile_Click(object sender, RoutedEventArgs e)
+        {
+            tbFilePath.Text = string.Empty;
         }
    }
 }
