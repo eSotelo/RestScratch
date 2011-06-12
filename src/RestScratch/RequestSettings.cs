@@ -11,6 +11,30 @@ namespace RestScratch
     [DataContract]
     public class RequestSettings : INotifyPropertyChanged
     {
+        string fileName;
+        [DataMember]
+        public string FileName
+        {
+            get { return fileName; }
+            set
+            {
+                this.fileName = value;
+                OnPropertyChanged("FileName");
+            }
+        }
+
+        string filePath;
+        [DataMember]
+        public string FilePath
+        {
+            get { return filePath; }
+            set
+            {
+                this.filePath = value;
+                OnPropertyChanged("FilePath");
+            }
+        }
+
         string address;
         [DataMember]
         public string Address
@@ -42,17 +66,6 @@ namespace RestScratch
             }
         }
 
-        string contentBody;
-        [DataMember]
-        public string ContentBody
-        {
-            get { return contentBody; }
-            set
-            {
-                contentBody= value;
-                OnPropertyChanged("QueryString");
-            }
-        }
         [DataMember]
         public IDictionary<string,string> Headers { get; private set; }
         [DataMember]
@@ -92,22 +105,20 @@ namespace RestScratch
             WebRequest request = WebRequest.Create(builder.Uri.AbsoluteUri);
             request.Method = Method;
             request.ContentType = ContentType;
-            string postData = null;
-            if (Form.Count > 0)
-                postData = ReconstructQueryString(Form);
-            else if( !string.IsNullOrWhiteSpace(ContentBody))
-                postData = ContentBody;
 
             foreach (KeyValuePair<string, string> item in this.Headers)
                 request.Headers.Add(item.Key, item.Value);
 
-            if (!string.IsNullOrWhiteSpace(postData) && request.Method.ToUpperInvariant() != "GET" )
+            if (request.Method.ToUpperInvariant() != "GET")
             {
-                byte[] data = System.Text.UTF8Encoding.UTF8.GetBytes(postData);
-                request.ContentLength = data.Length;
-                Stream reqStream = request.GetRequestStream();
-                reqStream.Write(data, 0, data.Length);
-                reqStream.Close();
+                FormDataWriter formWritter = null;
+                if (request.ContentType == "application/x-www-form-urlencoded")
+                    formWritter = new UrlEncodedFormDataWriter(request);
+                else if (request.ContentType == "multipart/form-data")
+                    formWritter = new MultiPartFormDataWriter(request);
+
+                if (formWritter != null)
+                    formWritter.WriteRequestStream(this);
             }
 
             return request;
