@@ -13,9 +13,13 @@ namespace RestScratch
 
         protected override void WriteFormData(System.IO.Stream stream, RequestSettings settings)
         {
-            if (settings.Form.Count == 0) return;
+            if (settings.Form.Count == 0 && string.IsNullOrWhiteSpace(settings.ContentBody)) return;
 
-            string postData = ReconstructQueryString(settings.Form);
+            string postData ="";
+            if (string.IsNullOrWhiteSpace(settings.ContentBody))
+                postData = ReconstructQueryString(settings.Form);
+            else
+                postData = settings.ContentBody;
 
             byte[] data = System.Text.UTF8Encoding.UTF8.GetBytes(postData);
 

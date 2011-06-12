@@ -11,6 +11,17 @@ namespace RestScratch
     [DataContract]
     public class RequestSettings : INotifyPropertyChanged
     {
+        string contentBody;
+        [DataMember]
+        public string ContentBody
+        {
+            get { return contentBody; }
+            set
+            {
+                contentBody = value;
+                OnPropertyChanged("ContentBody");
+            }
+        }
         string fileName;
         [DataMember]
         public string FileName
@@ -112,10 +123,11 @@ namespace RestScratch
             if (request.Method.ToUpperInvariant() != "GET")
             {
                 FormDataWriter formWritter = null;
-                if (request.ContentType == "application/x-www-form-urlencoded")
-                    formWritter = new UrlEncodedFormDataWriter(request);
-                else if (request.ContentType == "multipart/form-data")
+                
+                if (request.ContentType == "multipart/form-data")
                     formWritter = new MultiPartFormDataWriter(request);
+                else
+                    formWritter = new UrlEncodedFormDataWriter(request);
 
                 if (formWritter != null)
                     formWritter.WriteRequestStream(this);

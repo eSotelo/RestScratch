@@ -100,7 +100,7 @@ namespace RestScratch
             SetTextboxBinding(tbAddress, "Address");
             SetTextboxBinding(tbFileName, "FileName");
             SetTextboxBinding(tbFilePath, "FilePath");
-
+            SetTextboxBinding(tbEntityBody, "ContentBody");
             lvFormData.ItemsSource = null;
             lvFormData.ItemsSource = RequestSettings.Form;
             lvHeaders.ItemsSource = null;
@@ -124,7 +124,7 @@ namespace RestScratch
                 WebRequest request = RequestSettings.MakeWebRequest();
                 WebResponse response = request.GetResponse();
 
-                WriteResponse(result, response);
+                WriteResponse(result, response.ContentType, response);
             }
             catch (WebException ex)
             {
@@ -134,7 +134,7 @@ namespace RestScratch
                 result.AppendLine("HTTP Status: " + ex.Status);
 
                 if (ex.Response != null)
-                    WriteResponse(result, ex.Response);
+                    WriteResponse(result, "text/html", ex.Response);
                 else
                 {
                     wbResults.NavigateToString("Empty");
@@ -150,12 +150,12 @@ namespace RestScratch
             }
         }
 
-        private void WriteResponse(StringBuilder result, WebResponse response)
+        private void WriteResponse(StringBuilder result, string contentType, WebResponse response)
         {
             result.AppendLine("Content Type: " + response.ContentType);
             result.AppendLine(string.Format("HTTP Status: {0} ({1})", ((HttpWebResponse)response).StatusDescription, (int)((HttpWebResponse)response).StatusCode));
             result.AppendLine("------------------------------");
-            if (response.ContentType.StartsWith("text"))
+            if (contentType.ToLowerInvariant().StartsWith("text") || contentType.ToLowerInvariant().StartsWith("application/json"))
             {
                 WriteResponse(result, response.GetResponseStream());
                 SetForwardTab(response.ContentType);
@@ -163,7 +163,7 @@ namespace RestScratch
             else
             {
                 result.AppendLine("non-textural response");
-                if (response.ContentType.StartsWith("image"))
+                if (contentType.StartsWith("image"))
                 {
 
                     string path = Path.Combine(
@@ -184,12 +184,15 @@ namespace RestScratch
                         }
                         wbResults.Source = new Uri(path);
                     }
-                    
+                    tbiHtml.IsSelected = true;
+
                 }
                 else
+                {
                     wbResults.NavigateToStream(response.GetResponseStream());
-                
-                tbiHtml.IsSelected = true;
+
+                    SetForwardTab(contentType);
+                }
             }
         }
 
