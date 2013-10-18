@@ -1,175 +1,326 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Net;
-using System.Runtime.Serialization;
-using System.Text;
-
-namespace RestScratch
+﻿namespace RestScratch
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Runtime.Serialization;
+    using System.Text;
+
+    /// <summary>
+    /// Request Settings
+    /// </summary>
     [DataContract]
     public class RequestSettings : INotifyPropertyChanged
     {
-        string contentBody;
+        /// <summary>
+        /// The content body
+        /// </summary>
+        private string contentBody;
+
+        /// <summary>
+        /// The file name
+        /// </summary>
+        private string fileName;
+
+        /// <summary>
+        /// The file path
+        /// </summary>
+        private string filePath;
+
+        /// <summary>
+        /// The address
+        /// </summary>
+        private string address;
+
+        /// <summary>
+        /// The method
+        /// </summary>
+        private string method;
+
+        /// <summary>
+        /// The content type
+        /// </summary>
+        private string contentType;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequestSettings"/> class.
+        /// </summary>
+        public RequestSettings()
+        {
+            this.Method = "GET";
+            this.Headers = new Dictionary<string, string>();
+            this.Form = new Dictionary<string, string>();
+        }
+
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Gets or sets the content body.
+        /// </summary>
+        /// <value>
+        /// The content body.
+        /// </value>
         [DataMember]
         public string ContentBody
         {
-            get { return contentBody; }
+            get
+            {
+                return this.contentBody;
+            }
+
             set
             {
-                contentBody = value;
-                OnPropertyChanged("ContentBody");
+                this.contentBody = value;
+                this.OnPropertyChanged("ContentBody");
             }
         }
-        string fileName;
+
+        /// <summary>
+        /// Gets or sets the name of the file.
+        /// </summary>
+        /// <value>
+        /// The name of the file.
+        /// </value>
         [DataMember]
         public string FileName
         {
-            get { return fileName; }
+            get
+            {
+                return this.fileName;
+            }
+
             set
             {
                 this.fileName = value;
-                OnPropertyChanged("FileName");
+                this.OnPropertyChanged("FileName");
             }
         }
 
-        string filePath;
+        /// <summary>
+        /// Gets or sets the file path.
+        /// </summary>
+        /// <value>
+        /// The file path.
+        /// </value>
         [DataMember]
         public string FilePath
         {
-            get { return filePath; }
+            get
+            {
+                return this.filePath;
+            }
+
             set
             {
                 this.filePath = value;
-                OnPropertyChanged("FilePath");
+                this.OnPropertyChanged("FilePath");
             }
         }
 
-        string address;
+        /// <summary>
+        /// Gets or sets the address.
+        /// </summary>
+        /// <value>
+        /// The address.
+        /// </value>
         [DataMember]
         public string Address
         {
-            get { return this.address; }
+            get
+            {
+                return this.address;
+            }
+
             set
             {
                 this.address = value;
-                OnPropertyChanged("Address");
-            }
-        }
-        string method;
-        [DataMember]
-        public string Method { get { return method; }
-            set
-            {
-                method = value;
-                OnPropertyChanged("Method");
+                this.OnPropertyChanged("Address");
             }
         }
 
-        string contentType;
+        /// <summary>
+        /// Gets or sets the method.
+        /// </summary>
+        /// <value>
+        /// The method.
+        /// </value>
         [DataMember]
-        public string ContentType { get { return contentType; }
+        public string Method
+        {
+            get
+            {
+                return this.method;
+            }
+
             set
             {
-                contentType = value;
-                OnPropertyChanged("ContentType");
+                this.method = value;
+                this.OnPropertyChanged("Method");
             }
         }
 
+        /// <summary>
+        /// Gets or sets the type of the content.
+        /// </summary>
+        /// <value>
+        /// The type of the content.
+        /// </value>
         [DataMember]
-        public IDictionary<string,string> Headers { get; private set; }
+        public string ContentType
+        {
+            get
+            {
+                return this.contentType;
+            }
+
+            set
+            {
+                this.contentType = value;
+                this.OnPropertyChanged("ContentType");
+            }
+        }
+
+        /// <summary>
+        /// Gets the headers.
+        /// </summary>
+        /// <value>
+        /// The headers.
+        /// </value>
+        [DataMember]
+        public IDictionary<string, string> Headers { get; private set; }
+
+        /// <summary>
+        /// Gets the form.
+        /// </summary>
+        /// <value>
+        /// The form.
+        /// </value>
         [DataMember]
         public IDictionary<string, string> Form { get; private set; }
 
-
+        /// <summary>
+        /// Adds the header.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
         public void AddHeader(string key, string value)
         {
-            SetDictionaryValue(Headers, key, value);
-            OnPropertyChanged("Headers");
+            SetDictionaryValue(this.Headers, key, value);
+            this.OnPropertyChanged("Headers");
         }
+
+        /// <summary>
+        /// Adds the form component.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
         public void AddFormComponent(string key, string value)
         {
-            SetDictionaryValue(Form, key, value);
-            OnPropertyChanged("Form");
+            SetDictionaryValue(this.Form, key, value);
+            this.OnPropertyChanged("Form");
         }
 
-        private void SetDictionaryValue(IDictionary<string,string> dictionary, string key, string value)
-        {
-            if (dictionary.ContainsKey(key))
-                dictionary[key] = value;
-            else
-                dictionary.Add(key, value);
-            
-        }
-        public RequestSettings()
-        {
-            Method = "GET";
-            Headers = new Dictionary<string, string>();
-            Form = new Dictionary<string, string>();
-        }
-
+        /// <summary>
+        /// Makes the web request.
+        /// </summary>
+        /// <returns>The <see cref="WebRequest"/></returns>
         public WebRequest MakeWebRequest()
         {
-            UriBuilder builder = new UriBuilder(Address);
+            var builder = new UriBuilder(this.Address);
 
-            WebRequest request = WebRequest.Create(builder.Uri.AbsoluteUri);
-            request.Method = Method;
-            request.ContentType = ContentType;
+            var request = WebRequest.Create(builder.Uri.AbsoluteUri);
+            request.Method = this.Method;
+            request.ContentType = this.ContentType;
 
-            foreach (KeyValuePair<string, string> item in this.Headers)
+            foreach (var item in this.Headers)
+            {
                 request.Headers.Add(item.Key, item.Value);
+            }
 
             if (request.Method.ToUpperInvariant() != "GET")
             {
-                FormDataWriter formWritter = null;
-                
-                if (request.ContentType == "multipart/form-data")
-                    formWritter = new MultiPartFormDataWriter(request);
-                else
-                    formWritter = new UrlEncodedFormDataWriter(request);
+                FormDataWriter formWritter;
 
-                if (formWritter != null)
-                    formWritter.WriteRequestStream(this);
+                if (request.ContentType == "multipart/form-data")
+                {
+                    formWritter = new MultiPartFormDataWriter(request);
+                }
+                else
+                {
+                    formWritter = new UrlEncodedFormDataWriter(request);
+                }
+
+                formWritter.WriteRequestStream(this);
             }
 
             return request;
         }
 
-
+        /// <summary>
+        /// Reconstructs the query string.
+        /// </summary>
+        /// <param name="queryComponents">The query components.</param>
+        /// <returns>The reconstructed query string from the dictionary</returns>
         internal static string ReconstructQueryString(IDictionary<string, string> queryComponents)
         {
-            StringBuilder output = new StringBuilder();
-            TextWriter writer = new StringWriter(output);
-            bool first = true;
-            string queryComponentFormat = "{0}={1}";
-            foreach (var item in queryComponents)
+            var output = new StringBuilder();
+            var writer = new StringWriter(output);
+            var first = true;
+            const string QueryComponentFormat = "{0}={1}";
+
+            foreach (var item in queryComponents.Where(item => !string.IsNullOrWhiteSpace(item.Value)))
             {
-                if (string.IsNullOrWhiteSpace(item.Value))
-                    continue;
-
                 if (!first)
+                {
                     writer.Write("&");
+                }
                 else
+                {
                     first = false;
+                }
 
-                writer.Write(queryComponentFormat, item.Key, Uri.EscapeDataString(item.Value));
-
+                writer.Write(QueryComponentFormat, item.Key, Uri.EscapeDataString(item.Value));
             }
 
             return output.ToString();
         }
 
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        void OnPropertyChanged(string propertyName)
+        /// <summary>
+        /// Sets the dictionary value.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        private static void SetDictionaryValue(IDictionary<string, string> dictionary, string key, string value)
         {
-            if (this.PropertyChanged == null) return;
+            if (dictionary.ContainsKey(key))
+            {
+                dictionary[key] = value;
+            }
+            else
+            {
+                dictionary.Add(key, value);
+            }
+        }
+
+        /// <summary>
+        /// Called when [property changed].
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged == null)
+            {
+                return;
+            }
 
             this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-        #endregion
     }
 }

@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="RestScratch" Height="661" Width="680" Icon="/RestScratch;component/Explorer.ico" MinWidth="680" MinHeight="510">
     <Window.CommandBindings>
-        <CommandBinding Command="New" Executed="miNew_Click"/>
-        <CommandBinding Command="Open" Executed="miOpen_Click"/>
-        <CommandBinding Command="Save" Executed="miSave_Click"/>
-        <CommandBinding Command="SaveAs" Executed="miSaveAs_Click"/>
+        <CommandBinding Command="New" Executed="MiNewClick"/>
+        <CommandBinding Command="Open" Executed="MiOpenClick"/>
+        <CommandBinding Command="Save" Executed="MiSaveClick"/>
+        <CommandBinding Command="SaveAs" Executed="MiSaveAsClick"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="N" Modifiers="Control" Command="New"/>
@@ -27,12 +27,12 @@
         </ComboBox>
         <Menu Height="23" Name="mMain" IsMainMenu="True" VerticalAlignment="Top" Grid.ColumnSpan="2">
             <MenuItem Header="_File" >
-                <MenuItem Header="_New" InputGestureText="Ctrl + N" Name="miNew" Click="miNew_Click"/>
-                <MenuItem Header="_Open" InputGestureText="Ctrl + O" Name="miOpen" Click="miOpen_Click" />
-                <MenuItem Header="_Save" InputGestureText="Ctrl + S" Name="miSave" Click="miSave_Click" />
-                <MenuItem Header="Save _As" InputGestureText="Ctrl + Shft + S" Name="miSaveAs" Click="miSaveAs_Click" />
+                <MenuItem Header="_New" InputGestureText="Ctrl + N" Name="miNew" Click="MiNewClick"/>
+                <MenuItem Header="_Open" InputGestureText="Ctrl + O" Name="miOpen" Click="MiOpenClick" />
+                <MenuItem Header="_Save" InputGestureText="Ctrl + S" Name="miSave" Click="MiSaveClick" />
+                <MenuItem Header="Save _As" InputGestureText="Ctrl + Shft + S" Name="miSaveAs" Click="MiSaveAsClick" />
                 <Separator/>
-                <MenuItem Header="E_xit" Name="miExit" Click="miExit_Click" />
+                <MenuItem Header="E_xit" Name="miExit" Click="MiExitClick" />
             </MenuItem>
         </Menu>
         <Grid Margin="0,100,0,54" Name="grid1">
@@ -49,7 +49,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <ListView Margin="6,37,0,6" Name="lvHeaders" MouseDoubleClick="lvHeaders_MouseDoubleClick" Grid.Column="0">
+                <ListView Margin="6,37,0,6" Name="lvHeaders" MouseDoubleClick="LvHeadersMouseDoubleClick" Grid.Column="0">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Key" Width="Auto" DisplayMemberBinding="{Binding Path=Key}" />
@@ -58,9 +58,9 @@
                     </ListView.View>
                 </ListView>
                 <Label Content="Headers" Height="25" HorizontalAlignment="Left" Margin="6,6,0,0" Name="label3" VerticalAlignment="Top" Width="86" Grid.Column="0" />
-                <Button Content="+" Height="25" HorizontalAlignment="Right" Margin="0,5,26,0" Name="bAddHeader" VerticalAlignment="Top" Width="19" Click="bAddHeader_Click" Grid.Column="0" />
-                <Button Content="-" Height="25" HorizontalAlignment="Right" Margin="0,5,0,0" Name="bRemoveHeader" VerticalAlignment="Top" Width="20" Click="bRemoveHeader_Click" Grid.Column="0" />
-                <ListView Margin="5,39,6,70" Name="lvFormData" MouseDoubleClick="lvFormData_MouseDoubleClick" Grid.Column="1">
+                <Button Content="+" Height="25" HorizontalAlignment="Right" Margin="0,5,26,0" Name="bAddHeader" VerticalAlignment="Top" Width="19" Click="BAddHeaderClick" Grid.Column="0" />
+                <Button Content="-" Height="25" HorizontalAlignment="Right" Margin="0,5,0,0" Name="bRemoveHeader" VerticalAlignment="Top" Width="20" Click="BRemoveHeaderClick" Grid.Column="0" />
+                <ListView Margin="5,39,6,70" Name="lvFormData" MouseDoubleClick="LvFormDataMouseDoubleClick" Grid.Column="1">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Key}" Header="Key" />
@@ -69,14 +69,14 @@
                     </ListView.View>
                 </ListView>
                 <Label Content="Form Data" Height="25" HorizontalAlignment="Left" Margin="5,6,0,0" Name="label4" VerticalAlignment="Top" Width="86" Grid.Column="1" />
-                <Button Content="+" Height="25" HorizontalAlignment="Right" Margin="0,5,32,0" Name="bAddFormData" VerticalAlignment="Top" Width="19" Click="bAddFormData_Click" Grid.Column="1" />
-                <Button Content="-" Height="25" HorizontalAlignment="Right" Margin="0,4,6,0" Name="bRemoveFormData" VerticalAlignment="Top" Width="20" Click="bRemoveFormData_Click" Grid.Column="1" />
+                <Button Content="+" Height="25" HorizontalAlignment="Right" Margin="0,5,32,0" Name="bAddFormData" VerticalAlignment="Top" Width="19" Click="BAddFormDataClick" Grid.Column="1" />
+                <Button Content="-" Height="25" HorizontalAlignment="Right" Margin="0,4,6,0" Name="bRemoveFormData" VerticalAlignment="Top" Width="20" Click="BRemoveFormDataClick" Grid.Column="1" />
                 <TextBox Grid.Column="1" Margin="53,0,6,40" Name="tbFileName" ToolTip="The name in the form data that the file is posted as." Height="23" VerticalAlignment="Bottom" />
                 <Label Grid.Column="1" HorizontalAlignment="Left" Margin="4,0,0,37" Name="label5" Content="Name" Height="28" VerticalAlignment="Bottom" />
                 <Label Content="File" HorizontalAlignment="Left" Margin="4,0,0,8" Name="label8" Grid.Column="1" Height="28" VerticalAlignment="Bottom" />
                 <TextBox Margin="53,0,130,11" Name="tbFilePath" ToolTip="The name in the form data that the file is posted as." Grid.Column="1" Height="23" VerticalAlignment="Bottom" IsEnabled="False" />
-                <Button Content="_Browse" Grid.Column="1" Margin="0,0,68,12" Name="bBrowseFile" HorizontalAlignment="Right" Width="56" Height="23" VerticalAlignment="Bottom" Click="bBrowseFile_Click" />
-                <Button Content="Clear" Margin="0,0,6,11" Name="bClearFile" Grid.Column="1" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="56" Click="bClearFile_Click" />
+                <Button Content="_Browse" Grid.Column="1" Margin="0,0,68,12" Name="bBrowseFile" HorizontalAlignment="Right" Width="56" Height="23" VerticalAlignment="Bottom" Click="BBrowseFileClick" />
+                <Button Content="Clear" Margin="0,0,6,11" Name="bClearFile" Grid.Column="1" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="56" Click="BClearFileClick" />
                 <Label Content="Entity Body" Grid.Column="2" Height="28" HorizontalAlignment="Left" Margin="2,6,0,0" Name="label9" VerticalAlignment="Top" />
                 <TextBox Grid.Column="2" Margin="1,37,6,6" Name="tbEntityBody" AcceptsReturn="True" Text="" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" FontFamily="Courier New" />
             </Grid>
@@ -107,6 +107,6 @@
             <ComboBoxItem Content="multipart/form-data" ToolTip="boundary = -{,10}1234567890-{,10}" />
             <ComboBoxItem Content="application/json" />
         </ComboBox>
-        <Button Content="Run" Margin="0,0,6,31" Name="bRun" Click="bRun_Click" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" IsDefault="True" />
+        <Button Content="Run" Margin="0,0,6,31" Name="bRun" Click="BRunClick" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" IsDefault="True" />
     </Grid>
 </Window>
