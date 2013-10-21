@@ -204,6 +204,10 @@
             this.IsDirty = true;
         }
 
+        private void RunOnMainThread(Action action)
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, action);
+        }
         /// <summary>
         /// Handles the Click event of the bRun control.
         /// </summary>
@@ -212,6 +216,7 @@
         private void BRunClick(object sender, RoutedEventArgs e)
         {
             tbResults.Text = "Running...";
+            bRun.IsEnabled = false;
             Task.Factory.StartNew(
                 () =>
                     {
@@ -219,18 +224,12 @@
                         try
                         {
                             var request = RequestSettings.MakeWebRequest();
-
-                            Dispatcher.BeginInvoke(
-                                DispatcherPriority.Normal,
-                                new Action(() => tbResults.Text += "Executing Request..."));
+                            this.RunOnMainThread(() => tbResults.Text += "Executing Request...");
+                            
                             var response = request.GetResponse();
-                            Dispatcher.BeginInvoke(
-                               DispatcherPriority.Normal,
-                               new Action(() => tbResults.Text += "Got Response..."));
+                            this.RunOnMainThread(() => tbResults.Text += "Got Response...");
 
-                            Dispatcher.BeginInvoke(
-                                DispatcherPriority.Normal,
-                                new Action(() => this.WriteResponse(result, response.ContentType, response)));
+                           this.RunOnMainThread(() => this.WriteResponse(result, response.ContentType, response));
                         }
                         catch (WebException ex)
                         {
@@ -239,20 +238,16 @@
 
                             if (ex.Response != null)
                             {
-                                Dispatcher.BeginInvoke(
-                                    DispatcherPriority.Normal,
-                                    new Action(() => this.WriteResponse(result, "text/html", ex.Response)));
+                                this.RunOnMainThread(() => this.WriteResponse(result, "text/html", ex.Response));
                             }
                             else
                             {
-                                Dispatcher.BeginInvoke(
-                                    DispatcherPriority.Normal,
-                                    new Action(
-                                        () =>
-                                            {
-                                                wbResults.NavigateToString("Empty");
-                                                tbiSource.IsSelected = true;
-                                            }));
+                                this.RunOnMainThread(
+                                    () =>
+                                    {
+                                        wbResults.NavigateToString("Empty");
+                                        tbiSource.IsSelected = true;
+                                    });
                             }
 
                             result.AppendLine("Exception Detail");
@@ -261,8 +256,11 @@
                         }
                         finally
                         {
-                            Dispatcher.BeginInvoke(
-                                DispatcherPriority.Normal, new Action(() => tbResults.Text = result.ToString()));
+                            this.RunOnMainThread(() =>
+                                { 
+                                    tbResults.Text = result.ToString();
+                                    bRun.IsEnabled = true;
+                                });
                         }
                     });
         }
