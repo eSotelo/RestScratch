@@ -7,3 +7,4 @@ obj
 UserData
 *-results.xml
 *.Publish.xml
+StyleCop.Cache

@@ -7,10 +7,13 @@
     using System.Reflection;
     using System.Runtime.Serialization.Json;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Data;
+    using System.Windows.Threading;
+
     using Microsoft.Win32;
 
     /// <summary>
@@ -208,37 +211,60 @@
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void BRunClick(object sender, RoutedEventArgs e)
         {
-            var result = new StringBuilder();
-            try
-            {
-                var request = RequestSettings.MakeWebRequest();
-                var response = request.GetResponse();
+            tbResults.Text = "Running...";
+            Task.Factory.StartNew(
+                () =>
+                    {
+                        var result = new StringBuilder();
+                        try
+                        {
+                            var request = RequestSettings.MakeWebRequest();
 
-                this.WriteResponse(result, response.ContentType, response);
-            }
-            catch (WebException ex)
-            {
-                result.AppendLine("Exception!");
-                result.AppendLine("HTTP Status: " + ex.Status);
+                            Dispatcher.BeginInvoke(
+                                DispatcherPriority.Normal,
+                                new Action(() => tbResults.Text += "Executing Request..."));
+                            var response = request.GetResponse();
+                            Dispatcher.BeginInvoke(
+                               DispatcherPriority.Normal,
+                               new Action(() => tbResults.Text += "Got Response..."));
 
-                if (ex.Response != null)
-                {
-                    this.WriteResponse(result, "text/html", ex.Response);
-                }
-                else
-                {
-                    wbResults.NavigateToString("Empty");
-                    tbiSource.IsSelected = true;
-                }
+                            Dispatcher.BeginInvoke(
+                                DispatcherPriority.Normal,
+                                new Action(() => this.WriteResponse(result, response.ContentType, response)));
+                        }
+                        catch (WebException ex)
+                        {
+                            result.AppendLine("Exception!");
+                            result.AppendLine("HTTP Status: " + ex.Status);
 
-                result.AppendLine("Exception Detail");
+                            if (ex.Response != null)
+                            {
+                                Dispatcher.BeginInvoke(
+                                    DispatcherPriority.Normal,
+                                    new Action(() => this.WriteResponse(result, "text/html", ex.Response)));
+                            }
+                            else
+                            {
+                                Dispatcher.BeginInvoke(
+                                    DispatcherPriority.Normal,
+                                    new Action(
+                                        () =>
+                                            {
+                                                wbResults.NavigateToString("Empty");
+                                                tbiSource.IsSelected = true;
+                                            }));
+                            }
 
-                result.AppendLine(ex.ToString());
-            }
-            finally
-            {
-                tbResults.Text = result.ToString();
-            }
+                            result.AppendLine("Exception Detail");
+
+                            result.AppendLine(ex.ToString());
+                        }
+                        finally
+                        {
+                            Dispatcher.BeginInvoke(
+                                DispatcherPriority.Normal, new Action(() => tbResults.Text = result.ToString()));
+                        }
+                    });
         }
 
         /// <summary>
